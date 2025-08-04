@@ -1,0 +1,96 @@
+<!-- pneumonia_app/templates/client/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="icon" href="ty.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #c1dfc4, #deecdd);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 35px 45px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            width: 330px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+
+        .btn-admin {
+            background-color: #34495e;
+            color: white;
+        }
+
+        .btn-admin:hover {
+            background-color: #2c3e50;
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" class="container">
+        {% csrf_token %}
+        <h2>User Login</h2>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-login">Login</button>
+        <a href="/admin-panel/"><button type="button" class="btn btn-admin">Admin Login</button></a>
+        <p>Not registered? <a href="{% url 'signup' %}">Sign up</a></p>
+    </form>
+</body>
+</html>

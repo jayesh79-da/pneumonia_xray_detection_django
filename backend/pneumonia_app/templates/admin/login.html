@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Login</title>
+  <link rel="icon" href="ty.png" type="image/png">
+  <style>
+    body {
+      font-family: 'Segoe UI';
+      background: #f1f1f1;
+      margin: 0;
+    }
+
+    .navbar {
+      background-color: #333;
+      color: white;
+      padding: 15px 30px;
+      text-align: left;
+      font-size: 20px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px); /* adjust height considering navbar */
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+
+    input {
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #333;
+      color: white;
+      border: none;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #555;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">Admin Panel</div>
+
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    <h2>Admin Login</h2>
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+</div>
+
+</body>
+</html>

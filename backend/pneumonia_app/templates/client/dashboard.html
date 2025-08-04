@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="icon" href="ty.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #f1f8e9);
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #17a2b8;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .navbar h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      background-color: #138496;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #0f6674;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 40px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    input[type=file] {
+      padding: 12px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: #17a2b8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 10px;
+    }
+
+    button:hover {
+      background: #138496;
+    }
+
+    h3 {
+      color: #333;
+      margin-top: 30px;
+    }
+
+    .result-img {
+      margin-top: 20px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .report-section {
+      margin-top: 30px;
+    }
+
+    .report-buttons {
+      margin-top: 20px;
+    }
+  </style>
+
+  <script>
+    function downloadReport() {
+      const report = `
+        Chest X-Ray Report
+
+        Username: {{ username }}
+        Prediction: {{ result }}
+        Confidence: {{ prob }}%
+      `;
+      const blob = new Blob([report], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "xray_report.txt";
+      link.click();
+    }
+
+    function printReport() {
+      window.print();
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h2>Welcome {{ username }}</h2>
+    <a href="{% url 'logout' %}">Logout</a>
+  </div>
+
+  <!-- Upload Form -->
+  <div class="container">
+    <h2>Upload Chest X-Ray</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="file" name="xray" accept="image/*" required>
+      <br>
+      <button type="submit">Upload</button>
+    </form>
+
+    {% if result %}
+      <div class="report-section">
+        <h3>Prediction: <strong>{{ result }}</strong> (Confidence: {{ prob }}%)</h3>
+        <img src="{% url 'get_image' image_filename %}" class="result-img" alt="Uploaded X-ray">
+
+
+
+        <div class="report-buttons">
+          <button onclick="downloadReport()">Download Report</button>
+          <button onclick="printReport()">Print Report</button>
+        </div>
+      </div>
+
+       <p style="background-color: #fff3cd; color: #856404; padding: 12px; border: 1px solid #ffeeba; border-radius: 8px; margin-top: 20px;">
+	  		    <strong>Note:</strong> This detection just assists the doctors and does not provide 100% real results. So please consult with your doctor.
+  </p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

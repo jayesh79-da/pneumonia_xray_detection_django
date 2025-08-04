@@ -1,0 +1,47 @@
+pneumonia_xray_detection_django/
+│
+├── backend/
+│   ├── manage.py
+│   ├── .env                                # MongoDB Atlas credentials here
+│   ├── requirements.txt
+│   ├── ml_model/
+│   │   └── pneumonia_model.keras                       # Trained CNN model
+│   ├── uploads/
+│   │   └── (uploaded x-ray images)
+│   └── pneumonia_app/
+│       ├── __init__.py
+│       ├── settings.py
+│       ├── apps.py
+│       ├── views.py
+│       ├── urls.py
+│       ├── forms.py
+│       ├── models.py                       # Use PyMongo instead of ORM
+│       ├── templates/
+│       │   ├── client/
+│       │   │   ├── index.html              # With embedded CSS/JS
+│       │   │   ├── login.html
+│       │   │   ├── signup.html
+│       │   │   └── dashboard.html
+│       │   └── admin/
+│       │       ├── login.html
+│       │       ├── dashboard.html
+│       │       └── manage_users.html
+│       └── 
+│
+├── dataset/
+│   ├── train/
+│   │   ├── NORMAL/
+│   │   └── PNEUMONIA/
+	└── INVALID/
+│   ├── val/
+	├── NORMAL/
+│   │   └── PNEUMONIA/
+	└── INVALID/
+│   └── test/
+	├── NORMAL/
+│   │   └── PNEUMONIA/
+	└── INVALID/
+
+│
+├── README.md
+├── .gitignore

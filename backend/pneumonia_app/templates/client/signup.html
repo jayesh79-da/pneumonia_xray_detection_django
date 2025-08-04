@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+      <link rel="icon" href="ty.png" type="image/png">
+
+  <style>
+    body { font-family:'Segoe UI'; background:#eaf2f8; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+    form { background:white; padding:35px; border-radius:10px; box-shadow:0 8px 16px rgba(0,0,0,0.1); width:300px; }
+    input, button { width:100%; padding:10px; margin-bottom:15px; font-size:14px; border-radius:6px; }
+    input { border:1px solid #ccc; }
+    button { background:#28a745; border:none; color:white; font-size:16px; transition:0.3s; }
+    button:hover { background:#218838; cursor:pointer; }
+    h2 { margin-bottom:20px; color:#333; text-align:center;}
+  </style>
+</head>
+<body>
+  <form method="post">
+    {% csrf_token %}
+    <h2>Sign Up</h2>
+    {{ form.username }}<br>
+    {{ form.password }}<br>
+    <button type="submit">Register</button>
+    <p style="text-align:center;">Already registered? <a href="{% url 'login' %}">Login</a></p>
+  </form>
+</body>
+</html>
