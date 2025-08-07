@@ -172,46 +172,85 @@ def admin_view(request):
             messages.error(request, 'Invalid admin credentials.')
     return render(request, 'admin/login.html')
 
+from datetime import datetime
 
 def admin_dashboard(request):
     if not request.session.get('admin'):
         return redirect('admin_view')
-        
-    records = list(results_collection.find())
-    
-    for r in records:
-        r['id'] = str(r['_id']) 
-        r['username'] = r.get('username', 'Unknown')
-        r['filename'] = r.get('filename', 'Unknown')
-        r['result'] = r.get('result', 'N/A')
-        r['confidence'] = r.get('confidence', 0.0)  
 
-    return render(request, 'admin/dashboard.html', {'records': records})
+    query = {}
+
+    # Optional filters
+    username = request.GET.get('username')
+    if username:
+        query['username'] = username
+
+    date = request.GET.get('date')
+    if date:
+        try:
+            date_obj = datetime.strptime(date, '%d-%m-%Y')
+            start = datetime(date_obj.day, date_obj.month, date_obj.year)
+            end = datetime(date_obj.day, date_obj.month, date_obj.year, 23, 59, 59)
+            query['upload_time'] = {'$gte': start, '$lte': end}
+        except ValueError:
+            pass  # Skip if date format is invalid
+
+    # Fetch results
+    results = list(results_collection.find(query).sort('upload_time', -1))
+
+    for r in results:
+        r['id'] = str(r.get('_id'))
+        r['upload_time'] = r.get('upload_time').strftime('%d-%m-%Y %H:%M:%S') if r.get('upload_time') else 'N/A'
+        r['username'] = r.get('username', 'Unknown')
+        r['result'] = r.get('result', 'N/A')
+        r['confidence'] = r.get('confidence', 0.0)
+
+    return render(request, 'admin/dashboard.html', {'results': results})
+
+
 
 
 
 #users information 
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from bson import ObjectId
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+# Setup
+load_dotenv()
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client['pneumoniaDB']
+users_collection = db['users']
+results_collection = db['results']
 
 def manage_users(request):
     if request.method == 'POST':
         user_id = request.POST.get('delete_user_id')
         if user_id:
             try:
-                users.delete_one({'_id': ObjectId(user_id)})
+                users_collection.delete_one({'_id': ObjectId(user_id)})
                 messages.success(request, 'User deleted successfully!')
             except Exception as e:
                 messages.error(request, f'Error deleting user: {str(e)}')
         return redirect('manage_users')
 
-    user_list = []  
-    for user in users.find():  
+    user_list = []
+    for user in users_collection.find():
         user_id = str(user['_id'])
-        user['id'] = user_id
-        user_results = results_collection.find({'user_id': ObjectId(user_id)})
-        user['results'] = list(user_results)
+        user['id'] = user_id  # For use in form hidden input
+
+        username = user.get('username')
+        user_results = results_collection.find({'username': username})  # Join by username
+
+        user['result'] = list(user_results)  # Attach results list
         user_list.append(user)
 
     return render(request, 'admin/manage_users.html', {'users': user_list})
+
     
 #-------------------------------------------------
 

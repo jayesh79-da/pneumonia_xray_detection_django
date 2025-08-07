@@ -95,6 +95,34 @@
     .delete-btn:hover {
       background-color: #c0392b;
     }
+
+	  .filter-form {
+	    margin: 20px auto;
+	    text-align: center;
+	  }
+
+	  .filter-form input[type="text"],
+	  .filter-form input[type="date"],
+	  .filter-form button {
+	    padding: 8px;
+	    margin: 5px;
+	    font-size: 14px;
+	    border: 1px solid #ccc;
+	    border-radius: 5px;
+	  }
+
+	  .filter-form button {
+	    background-color: #2980b9;
+	    color: white;
+	    cursor: pointer;
+	  }
+
+	  .filter-form button:hover {
+	    background-color: #1c5980;
+	  }
+
+
+
   </style>
 </head>
 <body>
@@ -103,25 +131,43 @@
 <div class="navbar">
   <div class="logo">Admin Panel</div>
   <div class="nav-links">
+
+  <div class="filter-form">
+    <form method="get" action="{% url 'admin_dashboard' %}">
+      <input type="text" name="username" placeholder="Enter username" value="{{ request.GET.username }}">
+      <input type="date" name="date" value="{{ request.GET.date }}">
+      <button type="submit">Apply Filters</button>
+      <a href="{% url 'admin_dashboard' %}">
+        <button type="button" style="background-color: #7f8c8d;">Reset</button>
+      </a>
+    </form>
+  </div>
+
     <a href="/admin_dashboard/manage_users/">Manage Users</a>
     <a href="/client/login" class="logout-btn">Logout</a>
   </div>
 </div>
 
-<!-- Dashboard Content -->
+
 <div class="content">
   <h2>All Results</h2>
+  <h3>{{ request.GET.username }} {% with request.GET.date as d %}
+  {{ d|slice:"8:10" }}-{{ d|slice:"5:7" }}-{{ d|slice:"2:4" }}
+{% endwith %}
+</h3>
   <table>
     <tr>
       <th>User</th>
+      <th>UploadTime</th>
       <th>Filename</th>
       <th>Result</th>
       <th>Confidence</th>
       <th>Delete</th>
     </tr>
-    {% for r in records %}
+    {% for r in results %}
     <tr>
       <td>{{ r.username }}</td>
+       <td>{{ r.upload_time }}</td>
       <td>{{ r.filename }}</td>
       <td>{{ r.result }}</td>
       <td>

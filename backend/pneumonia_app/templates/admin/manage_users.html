@@ -3,7 +3,7 @@
 <head>
     <title>Manage Users</title>
     {% load static %}
-  <link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
+    <link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -33,10 +33,17 @@
             transform: translateY(-3px);
         }
 
-        .username {
-            font-size: 20px;
-            font-weight: bold;
-            color: #34495e;
+        .credentials {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .credentials p {
+            margin: 6px 0;
+            color: #2c3e50;
         }
 
         .result {
@@ -56,12 +63,6 @@
         .delete-btn {
             background-color: #e74c3c;
             color: white;
-        }
-
-        .view-btn {
-            background-color: #3498db;
-            color: white;
-            margin-left: 10px;
         }
 
         /* Popup CSS */
@@ -86,21 +87,29 @@
 
     {% for user in users %}
         <div class="user-card" id="user-{{ user.id }}">
-            <p class="username">{{ user.username }}</p>
-            <ul>
-                {% for result in user.result %}
-                    <li class="result">
-                        Prediction: {{ result.result }} |
-                        Upload Time: {{ result.upload_time }}
-                    </li>
-                {% endfor %}
-            </ul>
-            <form method="post" style="display:inline;">
+            <div class="credentials">
+                <p><strong>Name:</strong> {{ user.name }}</p>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone }}</p>
+            </div>
+               <ul>
+			          {% for result in user.result %}
+			          <li class="result">
+			              Prediction: {{ result.result }} |
+			              Upload Time: {{ result.upload_time }}
+			          </li>
+			          {% empty %}
+			          <li>No results found.</li>
+			          {% endfor %}
+    		</ul>
+
+
+           <form method="post" style="display:inline;">
                 {% csrf_token %}
                 <input type="hidden" name="delete_user_id" value="{{ user.id }}">
                 <button class="btn delete-btn" onclick="return confirmDelete(this)">Delete</button>
             </form>
-            <button class="btn view-btn" onclick="alert('Name: {{ user.name }} \nUsername: {{ user.username }}\n Email: {{ user.email }} \n Mobile No: {{ user.phone }} ')">View Credentials</button>
         </div>
     {% empty %}
         <p style="text-align:center;">No users found.</p>
