@@ -1,8 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
   <title>Dashboard</title>
-  <link rel="icon" href="ty.png" type="image/png">
+<link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
   <style>
     body {
       margin: 0;
@@ -10,7 +11,7 @@
       background: linear-gradient(to right, #e3f2fd, #f1f8e9);
     }
 
-    /* Navbar */
+
     .navbar {
       background-color: #17a2b8;
       padding: 15px 30px;
@@ -119,14 +120,17 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+
   <div class="navbar">
     <h2>Welcome {{ username }}</h2>
     <a href="{% url 'logout' %}">Logout</a>
   </div>
 
-  <!-- Upload Form -->
+
   <div class="container">
+   <p style="background-color: #fff3cd; color: red; padding: 12px; border: 1px solid #ffeeba; border-radius: 8px; margin-top: 20px;">
+    <strong>Note:</strong> This detection just assists the doctors and sometimes can make mistakes.
+  </p>
     <h2>Upload Chest X-Ray</h2>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -148,9 +152,6 @@
         </div>
       </div>
 
-       <p style="background-color: #fff3cd; color: #856404; padding: 12px; border: 1px solid #ffeeba; border-radius: 8px; margin-top: 20px;">
-	  		    <strong>Note:</strong> This detection just assists the doctors and does not provide 100% real results. So please consult with your doctor.
-  </p>
     {% endif %}
   </div>
 

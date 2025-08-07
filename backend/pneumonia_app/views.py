@@ -41,17 +41,25 @@ def signup_view(request):
     form = SignupForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        phone = form.cleaned_data['phone']
+        name = form.cleaned_data['name']
         password = form.cleaned_data['password']
 
         if users.find_one({'username': username}):
-            messages.error(request, 'Username taken.')
+            messages.error(request, 'Username already taken.')
+        elif users.find_one({'email': email}):
+            messages.error(request, 'Email already registered.')
         else:
             users.insert_one({
+                'name': name,
                 'username': username,
+                'email': email,
+                'phone': phone,
                 'password': password,
                 'invalid_attempts': 0
             })
-            messages.success(request, 'Signup successful, please log in.')
+            messages.success(request, 'Signup successful. Please log in.')
             return redirect('login')
     return render(request, 'client/signup.html', {'form': form})
 
@@ -150,9 +158,9 @@ def get_image(request, filename):
 
 def logout_view(request):
     request.session.flush()
-    return redirect('login')
+    return redirect('index')
 
-
+#=============================admin views======================================
 def admin_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -172,6 +180,7 @@ def admin_dashboard(request):
     records = list(results_collection.find())
     
     for r in records:
+        r['id'] = str(r['_id']) 
         r['username'] = r.get('username', 'Unknown')
         r['filename'] = r.get('filename', 'Unknown')
         r['result'] = r.get('result', 'N/A')
@@ -204,6 +213,21 @@ def manage_users(request):
 
     return render(request, 'admin/manage_users.html', {'users': user_list})
     
-    
+#-------------------------------------------------
+
+
+def delete_result(request, id):
+    if request.method == "POST":
+        try:
+            # Correct collection: results_collection, not users
+            result = results_collection.delete_one({"_id": ObjectId(id)})
+            if result.deleted_count == 1:
+                return redirect('admin_dashboard')
+            else:
+                return HttpResponse("Result not found.", status=404)
+        except Exception as e:
+            return HttpResponse(f"Error deleting result: {e}", status=500)
+    return HttpResponse("Invalid request method.", status=405)
+
   
    

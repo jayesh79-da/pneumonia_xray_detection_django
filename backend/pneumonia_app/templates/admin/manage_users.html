@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Manage Users</title>
-    <link rel="icon" href="ty.png" type="image/png">
+    {% load static %}
+  <link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -87,7 +88,7 @@
         <div class="user-card" id="user-{{ user.id }}">
             <p class="username">{{ user.username }}</p>
             <ul>
-                {% for result in user.results %}
+                {% for result in user.result %}
                     <li class="result">
                         Prediction: {{ result.result }} |
                         Upload Time: {{ result.upload_time }}
@@ -99,7 +100,7 @@
                 <input type="hidden" name="delete_user_id" value="{{ user.id }}">
                 <button class="btn delete-btn" onclick="return confirmDelete(this)">Delete</button>
             </form>
-            <button class="btn view-btn" onclick="alert('Username: {{ user.username }}\n')">View Credentials</button>
+            <button class="btn view-btn" onclick="alert('Name: {{ user.name }} \nUsername: {{ user.username }}\n Email: {{ user.email }} \n Mobile No: {{ user.phone }} ')">View Credentials</button>
         </div>
     {% empty %}
         <p style="text-align:center;">No users found.</p>

@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>Admin Login</title>
-  <link rel="icon" href="ty.png" type="image/png">
+  {% load static %}
+  <link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
   <style>
     body {
       font-family: 'Segoe UI';
@@ -27,7 +28,7 @@
 
     form {
       background: white;
-      padding: 30px;
+      padding: 50px 60px;
       border-radius: 10px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }

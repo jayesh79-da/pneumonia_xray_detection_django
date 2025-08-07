@@ -1,96 +1,163 @@
-<!-- pneumonia_app/templates/client/login.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
-    <link rel="icon" href="ty.png" type="image/png">
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #c1dfc4, #deecdd);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <title>Login</title>
+  {% load static %}
+  <link rel="icon" href="{% static 'images/ty.png' %}" type="image/png">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #eaf2f8, #d6eaf8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-        .container {
-            background-color: #fff;
-            padding: 35px 45px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            width: 330px;
-            text-align: center;
-        }
+    .container {
+      background-color: #ffffff;
+      padding: 20px 50px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
 
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 25px;
-        }
+    h2 {
+      color: #2d3436;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 14px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-        }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.3s ease;
+    }
 
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
-        }
+    input:focus {
+      border-color: #00b894;
+      box-shadow: 0 0 5px rgba(0, 184, 148, 0.4);
+      outline: none;
+    }
 
-        .btn-login {
-            background-color: #4CAF50;
-            color: white;
-        }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-        .btn-login:hover {
-            background-color: #45a049;
-        }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
 
-        .btn-admin {
-            background-color: #34495e;
-            color: white;
-        }
+    .btn-login {
+      background-color: #00b894;
+      color: white;
+    }
 
-        .btn-admin:hover {
-            background-color: #2c3e50;
-        }
+    .btn-login:hover {
+      background-color: #009874;
+    }
 
-        p {
-            margin-top: 15px;
-            font-size: 14px;
-        }
+    .btn-admin {
+      background-color: #636e72;
+      color: white;
+    }
 
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
+    .btn-admin:hover {
+      background-color: #2d3436;
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    p {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #00b894;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+
+    .popup-success {
+	      position: fixed;
+	      top: 20px;
+	      left: 50%;
+	      transform: translateX(-50%);
+	      background: #00b894;
+	      color: white;
+	      padding: 15px 30px;
+	      border-radius: 8px;
+	      font-size: 16px;
+	      font-weight: 500;
+	      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+	      opacity: 0;
+	      transition: opacity 0.4s ease;
+	      z-index: 1000;
+	    }
+
+	    .popup-success.show {
+	      opacity: 3;
+    }
+  </style>
 </head>
 <body>
-    <form method="post" class="container">
-        {% csrf_token %}
-        <h2>User Login</h2>
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-login">Login</button>
-        <a href="/admin-panel/"><button type="button" class="btn btn-admin">Admin Login</button></a>
-        <p>Not registered? <a href="{% url 'signup' %}">Sign up</a></p>
-    </form>
+  <form method="post" class="container">
+    {% csrf_token %}
+    <h2>User Login</h2>
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-login">Login</button>
+    <a href="/admin-panel/"><button type="button" class="btn btn-admin">Admin Login</button></a>
+    <p>Not registered? <a href="{% url 'signup' %}">Sign up</a></p>
+  </form>
+
+  <div id="loginSuccessPopup" style="display:none;" class="popup-success">
+    <p>Login Successful!</p>
+  </div>
+
+  <script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+      const username = document.getElementById("id_username").value.trim();
+      const password = document.getElementById("id_password").value.trim();
+
+      if (!username || !password) {
+        event.preventDefault();
+        alert("Both fields are required.");
+        return;
+      }
+
+
+      setTimeout(() => {
+        const popup = document.getElementById("loginSuccessPopup");
+        popup.style.display = "block";
+        popup.classList.add("show");
+
+        setTimeout(() => {
+          popup.classList.remove("show");
+          popup.style.display = "none";
+        }, 2500);
+      }, 100);
+    });
+  </script>
+
+
+
 </body>
 </html>

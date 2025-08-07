@@ -55,6 +55,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
+
+#optional
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Final destination
